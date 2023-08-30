@@ -1,19 +1,82 @@
-// Iteration 1: Declare variables required for this game
+const gameBody = document.getElementById("game-body");
+// let zombies
 
 // Iteration 1.2: Add shotgun sound
+let shortgunsound = new Audio("./assets/shotgun.wav");
+gameBody.onclick = () => {
+  shortgunsound.pause();
+  shortgunsound.currentTime = 0;
+  shortgunsound.play();
+};
 
 // Iteration 1.3: Add background sound
 
-// Iteration 1.4: Add lives
+let backgroundMusic = new Audio("./assets/bgm.mp3");
+backgroundMusic.play();
+backgroundMusic.loop = true;
 
-// Iteration 2: Write a function to make a zombie
+//generateing zombies
+let lives = 3
+let zombieID = 0;
+let zombie;
+function generateZombies() {
+  let num = generateUniqueNums(1, 7);
+  gameBody.innerHTML += `<img src=./assets/zombie-${num}.png class = zombie-image id = zombie${zombieID}>`;
 
-// Iteration 3: Write a function to check if the player missed a zombie
+  zombie = document.getElementById(`zombie${zombieID}`);
+  let seconds = generateUniqueNums(2, 7);
+  zombie.style.animationDuration = `${seconds}s`;
+  let viewwidth = generateUniqueNums(10, 90);
+  zombie.style.transform = `translateX(${viewwidth}vw)`;
 
-// Iteration 4: Write a function to destroy a zombie when it is shot or missed
+  zombie.onclick = () => {
+    destroyZombie(zombie);
+  };
+}
 
-// Iteration 5: Creating timer
+generateZombies();
 
-// Iteration 6: Write a code to start the game by calling the first zombie
+// RandomNumbers
 
-// Iteration 7: Write the helper function to get random integer
+function generateUniqueNums(min, max) {
+  return Math.floor(Math.random() * (max-min)) + min;
+}
+
+//function to destroy zombie
+
+function destroyZombie(tost) {
+  tost.style.display = "none"
+  zombieID++
+  generateZombies()
+}
+
+//To check zombie crossed line
+let time = 60
+function zombieEscape(zombie){
+
+    if(zombie.getBoundingClientRect().top<=0){
+    lives--
+
+if(lives<=0){
+    location.href="game-over.html"
+}else{
+    destroyZombie(zombie)
+}
+    }
+}
+zombieEscape(zombie)
+
+//timer function
+
+setInterval(timer,1000)
+
+function timer(){
+if(time<=0){
+    location.href="win.html"
+}else{
+    time--
+    document.getElementById("timer").innerText = time
+    zombieEscape(zombie)
+}
+
+}
